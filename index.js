@@ -21,6 +21,7 @@ document.addEventListener("click", (e) => {
         body.style.overflow = "hidden"
     }
     else if (e.target.id === "pay-btn") {
+        e.preventDefault()
         orderComplete()
     }
 })
@@ -44,14 +45,24 @@ function resetOrder() {
 }
 
 function orderComplete() {
-    modal.innerHTML = `
-        <h1>Order Complete! Thankyou</h1>
-    `
-    modal.style.height = "150px"
-    modal.style.backgroundColor = "#16DB99"
-    modal.style.color = "white"
-
-    resetOrder()
+        const inputRequiredArr = []
+        const inputElements = document.querySelectorAll("input")
+        inputElements.forEach(input => {
+            inputRequiredArr.push(input.value)
+        })
+        if (inputRequiredArr.every(input => {
+            return !!input
+        })) {
+            modal.innerHTML = `
+            <h1>Order Complete! Thankyou</h1>
+            `
+            modal.style.height = "150px"
+            modal.style.backgroundColor = "#16DB99"
+            modal.style.color = "white"
+        
+            resetOrder()
+        }
+    
 }
 
 function calculateTotalPrice(itemsArr) {
@@ -120,7 +131,7 @@ function generateModal() {
 		<input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" name="card-number" class="card-input" id="card-input"
 		 placeholder="xxxx xxxx xxxx xxxx" required />
 		<input inputmode="numeric" maxlength="3" name="cvv" class="cvv-input" id="cvv-input" placeholder="Enter CVV" required />
-		<button id="pay-btn" class="pay-btn">Pay</button>
+		<button type="submit" id="pay-btn" class="pay-btn">Pay</button>
     `
     modal.style.height = "90vh"
     modal.style.backgroundColor = "white"
